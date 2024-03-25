@@ -97,12 +97,12 @@ func (pImpl *ProjectImpl) GetById(id int64, lang string,
 			return tx.Select("project_id, image")
 		}).
 		Preload("Specs")
-	if lang != "" {
-		query.Preload("Descs", func(tx *gorm.DB) *gorm.DB {
-			return tx.Where("language = ?", lang)
-		})
+	if lang == "" {
+		lang = "vi"
 	}
-
+	query.Preload("Descs", func(tx *gorm.DB) *gorm.DB {
+		return tx.Where("language = ?", lang)
+	})
 	var err = query.First(project).Error
 	if nil != err {
 		return nil, dmodels.ParsePostgresError("Project", err)
