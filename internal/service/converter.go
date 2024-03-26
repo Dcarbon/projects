@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/Dcarbon/arch-proto/pb"
 	"github.com/Dcarbon/go-shared/dmodels"
+	"github.com/Dcarbon/go-shared/libs/utils"
 	"github.com/Dcarbon/projects/internal/domain"
 )
 
@@ -18,9 +19,10 @@ func convertProject(in *domain.Project) *pb.Project {
 		Status:       int32(in.Status),
 		Ca:           in.CreatedAt.UnixMilli(),
 		Ua:           in.UpdatedAt.UnixMilli(),
-		Images:       []string{},
+		Images:       convertImage(in.Images),
 		Specs:        convertProjectSpecs(in.Specs),
 		Descs:        convertArr[domain.ProjectDesc, pb.ProjectDesc](in.Descs, convertProjectDesc),
+		Area:         in.Area,
 	}
 	return rs
 }
@@ -56,6 +58,17 @@ func convertGPS(in *dmodels.Coord) *pb.GPS {
 	var rs = &pb.GPS{
 		Latitude:  in.Lat,
 		Longitude: in.Lng,
+	}
+	return rs
+}
+
+func convertImage(in []*domain.ProjectImage) []string {
+	if nil == in {
+		return nil
+	}
+	var rs = make([]string, len(in))
+	for i, it := range in {
+		rs[i] = utils.StringEnv("STORAGE_URL", "") + it.Image
 	}
 	return rs
 }
