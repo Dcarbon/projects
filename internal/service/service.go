@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Dcarbon/arch-proto/pb"
+	"github.com/Dcarbon/go-shared/dmodels"
 	"github.com/Dcarbon/go-shared/gutils"
 	"github.com/Dcarbon/go-shared/libs/sclient"
 	"github.com/Dcarbon/projects/internal/domain"
@@ -14,9 +15,8 @@ import (
 type Service struct {
 	pb.UnimplementedProjectServiceServer
 	*gutils.GService
-	iProject   domain.IProject
-	storage    sclient.IStorage
-	mapService *MapService
+	iProject domain.IProject
+	storage  sclient.IStorage
 }
 
 func NewProjectService(config *gutils.Config,
@@ -39,15 +39,9 @@ func NewProjectService(config *gutils.Config,
 	if nil != err {
 		return nil, err
 	}
-
-	mapService, err := NewMapService(config)
-	if err != nil {
-		return nil, err
-	}
 	var sv = &Service{
-		iProject:   iProject,
-		storage:    storage,
-		mapService: mapService,
+		iProject: iProject,
+		storage:  storage,
 	}
 
 	return sv, nil
@@ -55,6 +49,17 @@ func NewProjectService(config *gutils.Config,
 
 func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 ) (*pb.Project, error) {
+	//TODO: insert createProject
+	sv.iProject.Create(&domain.RProjectCreate{
+		Owner:        dmodels.EthAddress(req.Owner),
+		Location:     dmodels.NewCoord4326(req.Location.Longitude, req.Location.Latitude),
+		Specs:        nil,
+		Descs:        nil,
+		Area:         0, //TODO: Area
+		LocationName: req.LocationName,
+	})
+	//TODO: insert createProjectDetail
+
 	return nil, gutils.ErrorNotImplement
 }
 
@@ -80,8 +85,7 @@ func (sv *Service) GetById(ctx context.Context, req *pb.RPGetById,
 		return nil, err
 	}
 	response := convertProject(data)
-	address, _ := sv.mapService.GetAddress(data.Location.Lat, data.Location.Lng)
-	response.Address = address
+	response.Address = "address" //TODO: Get Address
 	return response, nil
 }
 
