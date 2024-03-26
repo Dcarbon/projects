@@ -14,8 +14,9 @@ import (
 type Service struct {
 	pb.UnimplementedProjectServiceServer
 	*gutils.GService
-	iProject domain.IProject
-	storage  sclient.IStorage
+	iProject   domain.IProject
+	storage    sclient.IStorage
+	mapService *MapService
 }
 
 func NewProjectService(config *gutils.Config,
@@ -39,10 +40,16 @@ func NewProjectService(config *gutils.Config,
 		return nil, err
 	}
 
-	var sv = &Service{
-		iProject: iProject,
-		storage:  storage,
+	mapService, err := NewMapService(config)
+	if err != nil {
+		return nil, err
 	}
+	var sv = &Service{
+		iProject:   iProject,
+		storage:    storage,
+		mapService: mapService,
+	}
+
 	return sv, nil
 }
 
@@ -72,7 +79,10 @@ func (sv *Service) GetById(ctx context.Context, req *pb.RPGetById,
 	if nil != err {
 		return nil, err
 	}
-	return convertProject(data), nil
+	response := convertProject(data)
+	address, _ := sv.mapService.GetAddress(data.Location.Lat, data.Location.Lng)
+	response.Address = address
+	return response, nil
 }
 
 func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,

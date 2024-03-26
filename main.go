@@ -14,7 +14,7 @@ import (
 
 var config = gutils.Config{
 	Port:   utils.IntEnv("PORT", 4012),
-	DbUrl:  utils.StringEnv("DB_URL", "postgres://admin:hellosecret@dev01.dcarbon.org/projects"), //dev01.dcarbon.org,localhost
+	DbUrl:  utils.StringEnv("DB_URL", "postgres://admin:hellosecret@dev01.dcarbon.org/projects"), //,localhost
 	Name:   "ProjectService",
 	JwtKey: utils.StringEnv("JWT", ""),
 	Options: map[string]string{
@@ -78,7 +78,6 @@ func main() {
 			auth.Intercept,
 		),
 	)
-
 	pb.RegisterProjectServiceServer(sv, handler)
 	log.Println(config.Name+" listen and serve at ", config.Port)
 	err = sv.Serve(listen)
