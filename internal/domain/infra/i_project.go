@@ -32,20 +32,16 @@ func NewProjectImpl(db *gorm.DB) (*ProjectImpl, error) {
 
 func (pImpl *ProjectImpl) Create(req *domain.RProjectCreate,
 ) (*domain.Project, error) {
-	var project = req.ToProject()
-	var e1 = pImpl.tblProject().Transaction(func(dbTx *gorm.DB) error {
-		err := dbTx.Table(domain.TableNameProject).Create(project).Error
-		if nil != err {
+	project := req.ToProject()
+	if err := pImpl.tblProject().Transaction(func(dbTx *gorm.DB) error {
+		if err := dbTx.Table(domain.TableNameProject).Omit("Images").
+			Create(project).Error; err != nil {
 			return dmodels.ParsePostgresError("Create project", err)
 		}
-
 		return nil
-	})
-
-	if nil != e1 {
-		return nil, e1
+	}); err != nil {
+		return nil, err
 	}
-
 	return project, nil
 }
 

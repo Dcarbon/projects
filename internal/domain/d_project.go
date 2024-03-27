@@ -54,14 +54,15 @@ type RProjectAddImage struct {
 
 func (rproject *RProjectCreate) ToProject() *Project {
 	var project = &Project{
-		Id:        0,
-		Status:    ProjectStatusRegister,
-		Owner:     rproject.Owner,
-		Location:  rproject.Location,
-		Specs:     rproject.Specs.ToProjectSpecs(),
-		Descs:     make([]*ProjectDesc, len(rproject.Descs)),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           0,
+		LocationName: rproject.LocationName,
+		Status:       ProjectStatusRegister,
+		Owner:        rproject.Owner,
+		Location:     rproject.Location,
+		Specs:        rproject.Specs.ToProjectSpecs(),
+		Descs:        make([]*ProjectDesc, len(rproject.Descs)),
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	for i, desc := range rproject.Descs {
@@ -72,6 +73,9 @@ func (rproject *RProjectCreate) ToProject() *Project {
 }
 
 func (rdesc *RProjectUpdateDesc) ToProjectDesc() *ProjectDesc {
+	if rdesc == nil {
+		return nil
+	}
 	return &ProjectDesc{
 		Id:        0,
 		ProjectId: rdesc.ProjectId,
@@ -82,6 +86,9 @@ func (rdesc *RProjectUpdateDesc) ToProjectDesc() *ProjectDesc {
 }
 
 func (rspec *RProjectUpdateSpecs) ToProjectSpecs() *ProjectSpecs {
+	if rspec.Specs == nil {
+		return nil
+	}
 	return &ProjectSpecs{
 		Id:        0,
 		ProjectId: rspec.ProjectId,

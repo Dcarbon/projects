@@ -49,18 +49,27 @@ func NewProjectService(config *gutils.Config,
 
 func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 ) (*pb.Project, error) {
-	//TODO: insert createProject
-	sv.iProject.Create(&domain.RProjectCreate{
+	// insert project
+	var descs []*domain.RProjectUpdateDesc
+	for _, desc := range req.Descs {
+		descs = append(descs, &domain.RProjectUpdateDesc{
+			Language: desc.Language,
+			Name:     desc.Name,
+			Desc:     desc.Desc})
+	}
+	project, err := sv.iProject.Create(&domain.RProjectCreate{
 		Owner:        dmodels.EthAddress(req.Owner),
 		Location:     dmodels.NewCoord4326(req.Location.Longitude, req.Location.Latitude),
-		Specs:        nil,
-		Descs:        nil,
-		Area:         0, //TODO: Area
+		Specs:        &domain.RProjectUpdateSpecs{Specs: req.Specs.GetSpecs()},
+		Descs:        descs,
+		Area:         0, //TODO: fix Area
 		LocationName: req.LocationName,
 	})
-	//TODO: insert createProjectDetail
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, gutils.ErrorNotImplement
+	return convertProject(project), nil
 }
 
 func (sv *Service) UpdateDesc(ctx context.Context, req *pb.RPUpdateDesc,
@@ -85,7 +94,7 @@ func (sv *Service) GetById(ctx context.Context, req *pb.RPGetById,
 		return nil, err
 	}
 	response := convertProject(data)
-	response.Address = "address" //TODO: Get Address
+	response.Address = data.LocationName
 	return response, nil
 }
 
