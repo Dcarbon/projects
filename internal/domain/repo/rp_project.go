@@ -1,4 +1,4 @@
-package infra
+package repo
 
 import (
 	"time"
@@ -47,20 +47,16 @@ func (pImpl *ProjectImpl) Create(req *domain.RProjectCreate,
 
 func (pImpl *ProjectImpl) UpdateDesc(req *domain.RProjectUpdateDesc,
 ) (*domain.ProjectDesc, error) {
-	var desc = req.ToProjectDesc()
-
-	var err = pImpl.tblProjectDesc().
+	desc := req.ToProjectDesc()
+	if err := pImpl.tblProjectDesc().
 		Clauses(
 			clause.OnConflict{
 				Columns: []clause.Column{
 					{Name: "project_id"}, {Name: "language"},
 				},
 				UpdateAll: true,
-			},
-			clause.Insert{},
-		).
-		Create(desc).Error
-	if nil != err {
+			}).
+		Create(desc).Error; nil != err {
 		return nil, dmodels.ParsePostgresError("Update project desc", err)
 	}
 	return desc, nil
@@ -70,7 +66,7 @@ func (pImpl *ProjectImpl) UpdateSpecs(req *domain.RProjectUpdateSpecs,
 ) (*domain.ProjectSpecs, error) {
 	var spec = req.ToProjectSpecs()
 
-	var err = pImpl.tblProjectSpec().
+	if err := pImpl.tblProjectSpec().
 		Clauses(
 			clause.OnConflict{
 				Columns: []clause.Column{{Name: "project_id"}},
@@ -78,8 +74,7 @@ func (pImpl *ProjectImpl) UpdateSpecs(req *domain.RProjectUpdateSpecs,
 					[]string{"specs", "updated_at"},
 				),
 			},
-		).Create(spec).Error
-	if nil != err {
+		).Create(spec).Error; nil != err {
 		return nil, dmodels.ParsePostgresError("Update project desc", err)
 	}
 	return spec, nil
@@ -158,7 +153,6 @@ func (pImpl *ProjectImpl) GetOwner(projectId int64) (string, error) {
 func (pImpl *ProjectImpl) AddImage(req *domain.RProjectAddImage,
 ) (*domain.ProjectImage, error) {
 	var img = &domain.ProjectImage{
-		Id:        0,
 		ProjectId: req.ProjectId,
 		Image:     req.ImgPath,
 		CreatedAt: time.Now(),

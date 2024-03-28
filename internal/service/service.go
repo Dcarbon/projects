@@ -3,12 +3,13 @@ package service
 import (
 	"context"
 
+	"github.com/Dcarbon/projects/internal/domain/repo"
+
 	"github.com/Dcarbon/arch-proto/pb"
 	"github.com/Dcarbon/go-shared/dmodels"
 	"github.com/Dcarbon/go-shared/gutils"
 	"github.com/Dcarbon/go-shared/libs/sclient"
 	"github.com/Dcarbon/projects/internal/domain"
-	"github.com/Dcarbon/projects/internal/domain/infra"
 	"github.com/Dcarbon/projects/internal/rss"
 )
 
@@ -23,7 +24,7 @@ func NewProjectService(config *gutils.Config,
 ) (*Service, error) {
 	rss.SetUrl(config.GetDBUrl())
 
-	iProject, err := infra.NewProjectImpl(rss.GetDB())
+	iProject, err := repo.NewProjectImpl(rss.GetDB())
 	if nil != err {
 		return nil, err
 	}
@@ -49,7 +50,6 @@ func NewProjectService(config *gutils.Config,
 
 func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 ) (*pb.Project, error) {
-	// insert project
 	var descs []*domain.RProjectUpdateDesc
 	for _, desc := range req.Descs {
 		descs = append(descs, &domain.RProjectUpdateDesc{
@@ -74,17 +74,41 @@ func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 
 func (sv *Service) UpdateDesc(ctx context.Context, req *pb.RPUpdateDesc,
 ) (*pb.ProjectDesc, error) {
-	return nil, nil
+	desc, err := sv.iProject.UpdateDesc(&domain.RProjectUpdateDesc{
+		ProjectId: req.ProjectId,
+		Language:  req.Language,
+		Name:      req.Name,
+		Desc:      req.Desc,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return convertProjectDesc(desc), nil
 }
 
 func (sv *Service) UpdateSpecs(ctx context.Context, req *pb.RPUpdateSpecs,
 ) (*pb.ProjectSpecs, error) {
-	return nil, gutils.ErrorNotImplement
+	spec, err := sv.iProject.UpdateSpecs(&domain.RProjectUpdateSpecs{
+		ProjectId: req.ProjectId,
+		Specs:     req.Specs,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return convertProjectSpecs(spec), nil
 }
 
 func (sv *Service) AddImage(ctx context.Context, req *pb.RPAddImage,
 ) (*pb.String, error) {
-	return nil, gutils.ErrorNotImplement
+	path, err := sv.storage.UploadToProject(req.Image, req.ProjectId)
+	if err != nil {
+		return nil, err
+	}
+	image, err := sv.iProject.AddImage(&domain.RProjectAddImage{ProjectId: req.ProjectId, ImgPath: path})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.String{Data: image.Image}, nil
 }
 
 func (sv *Service) GetById(ctx context.Context, req *pb.RPGetById,
