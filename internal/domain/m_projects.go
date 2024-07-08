@@ -36,14 +36,17 @@ type Project struct {
 	Images       []*ProjectImage    `json:"images,omitempty"          gorm:"foreignKey:ProjectId"`       //
 	CreatedAt    time.Time          `json:"createdAt"                 `                                  //
 	UpdatedAt    time.Time          `json:"updatedAt"                 `                                  //
+	Type         int64              `json:"type" gorm:"column:type"`
+	Unit         float32            `json:"unit" gorm:"column:unit"`
 } //@name Project
 
 func (*Project) TableName() string { return TableNameProject }
 
 type ProjectDesc struct {
-	Id        int64     `gorm:"primaryKey"`
-	ProjectId int64     `gorm:"index:idx_project_desc_lang,unique,priority:1"` //
-	Language  string    `gorm:"index:idx_project_desc_lang,unique,priority:2"` //
+	Id        int64  `gorm:"primaryKey"`
+	ProjectId int64  `gorm:"index:idx_project_desc_lang,unique,priority:1"` //
+	Language  string `gorm:"index:idx_project_desc_lang,unique,priority:2"` //
+	Country   string
 	Name      string    ``
 	Desc      string    ``
 	CreatedAt time.Time ``

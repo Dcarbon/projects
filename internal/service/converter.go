@@ -23,6 +23,8 @@ func convertProject(in *domain.Project) *pb.Project {
 		Specs:        convertProjectSpecs(in.Specs),
 		Descs:        convertArr[domain.ProjectDesc, pb.ProjectDesc](in.Descs, convertProjectDesc),
 		Area:         in.Area,
+		Type:         pb.ProjectType(in.Type),
+		Unit:         in.Unit,
 	}
 	return rs
 }
@@ -36,6 +38,7 @@ func convertProjectDesc(in *domain.ProjectDesc) *pb.ProjectDesc {
 		Language: in.Language,
 		Name:     in.Name,
 		Desc:     in.Desc,
+		Country:  in.Country,
 	}
 	return rs
 }

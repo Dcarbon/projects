@@ -114,7 +114,7 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 	}
 
 	var data = make([]*domain.Project, 0)
-	var err = tbl.Find(&data).Error
+	var err = tbl.Preload("Descs").Find(&data).Error
 	if nil != err {
 		return nil, dmodels.ParsePostgresError("Project", err)
 	}

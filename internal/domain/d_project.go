@@ -27,6 +27,8 @@ type RProjectCreate struct {
 	Descs        []*RProjectUpdateDesc ``
 	Area         float64               ``
 	LocationName string                ``
+	Type         int32
+	Unit         float32
 }
 
 type RProjectUpdateDesc struct {

@@ -64,6 +64,8 @@ func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 		Descs:        descs,
 		Area:         0, //TODO: fix Area
 		LocationName: req.LocationName,
+		Type:         int32(req.GetType()),
+		Unit:         float32(req.Unit),
 	})
 	if err != nil {
 		return nil, err
