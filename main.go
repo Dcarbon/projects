@@ -39,7 +39,7 @@ var config = gutils.Config{
 			PermDesc:   "Update project specification",
 		},
 		"/pb.ProjectService/AddImage": {
-			Require:    true,
+			Require:    false,
 			Permission: "project-info-add-image",
 			PermDesc:   "Add image to project",
 		},
