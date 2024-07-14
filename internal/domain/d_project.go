@@ -18,6 +18,7 @@ type IProject interface {
 
 	AddImage(*RProjectAddImage) (*ProjectImage, error)
 	ChangeStatus(id string, status ProjectStatus) error
+	GetCountry(id int, vi string) (*Country, error)
 }
 
 type RProjectCreate struct {

@@ -14,7 +14,7 @@ import (
 
 var config = gutils.Config{
 	Port:   utils.IntEnv("PORT", 4012),
-	DbUrl:  utils.StringEnv("DB_URL", "postgres://admin:hellosecret@dev01.dcarbon.org/projects"), //,localhost
+	DbUrl:  utils.StringEnv("DB_URL", "postgres://admin:hellosecret@13.228.11.143/projects"), //,localhost
 	Name:   "ProjectService",
 	JwtKey: utils.StringEnv("JWT", ""),
 	Options: map[string]string{

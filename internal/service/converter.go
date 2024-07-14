@@ -25,6 +25,10 @@ func convertProject(in *domain.Project) *pb.Project {
 		Area:         in.Area,
 		Type:         pb.ProjectType(in.Type),
 		Unit:         in.Unit,
+		Country: &pb.Country{
+			Id:   in.Country.Id,
+			Name: in.Country.Name,
+		},
 	}
 	return rs
 }
@@ -38,7 +42,6 @@ func convertProjectDesc(in *domain.ProjectDesc) *pb.ProjectDesc {
 		Language: in.Language,
 		Name:     in.Name,
 		Desc:     in.Desc,
-		Country:  in.Country,
 	}
 	return rs
 }

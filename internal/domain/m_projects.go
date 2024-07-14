@@ -38,15 +38,16 @@ type Project struct {
 	UpdatedAt    time.Time          `json:"updatedAt"                 `                                  //
 	Type         int64              `json:"type" gorm:"column:type"`
 	Unit         float32            `json:"unit" gorm:"column:unit"`
+	CountryId    int64              `gorm:"column:country_id"`
+	Country      *Country           `json:"country" gorm:"-"`
 } //@name Project
 
 func (*Project) TableName() string { return TableNameProject }
 
 type ProjectDesc struct {
-	Id        int64  `gorm:"primaryKey"`
-	ProjectId int64  `gorm:"index:idx_project_desc_lang,unique,priority:1"` //
-	Language  string `gorm:"index:idx_project_desc_lang,unique,priority:2"` //
-	Country   string
+	Id        int64     `gorm:"primaryKey"`
+	ProjectId int64     `gorm:"index:idx_project_desc_lang,unique,priority:1"` //
+	Language  string    `gorm:"index:idx_project_desc_lang,unique,priority:2"` //
 	Name      string    ``
 	Desc      string    ``
 	CreatedAt time.Time ``
@@ -87,6 +88,15 @@ func (m *MapSFloat) Scan(value interface{}) error {
 		return json.Unmarshal(vt, m)
 	}
 	return errors.New("scan value type for MapSFloat invalid")
+}
+
+type Country struct {
+	Id   int64  `json:"id"  `
+	Name string `json:"name"`
+}
+type Language struct {
+	Locale string `json:"locale"`
+	Name   string `json:"name"`
 }
 
 func (m MapSFloat) Value() (driver.Value, error) {

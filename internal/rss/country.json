@@ -1,0 +1,22 @@
+{
+    "1":[
+        {
+            "locale":"vi",
+            "name":"Việt Nam"                    
+        },
+        {
+            "locale":"en",
+            "name":"Viet Nam"                    
+        }
+      ],
+      "2":[
+        {
+            "locale":"vi",
+            "name":"Úc"                    
+        },
+        {
+            "locale":"en",
+            "name":"Australia"                    
+        }
+      ]
+}

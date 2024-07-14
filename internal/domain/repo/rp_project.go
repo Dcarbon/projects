@@ -1,6 +1,11 @@
 package repo
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/Dcarbon/go-shared/dmodels"
@@ -98,7 +103,8 @@ func (pImpl *ProjectImpl) GetById(id int64, lang string,
 	if nil != err {
 		return nil, dmodels.ParsePostgresError("Project", err)
 	}
-
+	country, _ := pImpl.GetCountry(int(project.CountryId), lang)
+	project.Country = country
 	return project, nil
 }
 
@@ -117,6 +123,11 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 	var err = tbl.Preload("Descs").Find(&data).Error
 	if nil != err {
 		return nil, dmodels.ParsePostgresError("Project", err)
+	}
+	for _, dat := range data {
+		country, _ := pImpl.GetCountry(int(dat.CountryId), "vi")
+		dat.Country = country
+
 	}
 	return data, nil
 }
@@ -162,6 +173,29 @@ func (pImpl *ProjectImpl) AddImage(req *domain.RProjectAddImage,
 		return nil, dmodels.ParsePostgresError("AddImage ", err)
 	}
 	return img, nil
+}
+
+func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, error) {
+
+	jsonPath := "internal/rss/country.json"
+	jsonFile, err := os.Open(jsonPath)
+	if err != nil {
+		return &domain.Country{}, dmodels.ParsePostgresError("Get Country ", err)
+	}
+	defer jsonFile.Close()
+	jsonByte, _ := io.ReadAll(jsonFile)
+	countries := map[string][]domain.Language{}
+	_ = json.Unmarshal(jsonByte, &countries)
+	for _, language := range countries[strconv.Itoa(id)] {
+		fmt.Println(language.Name)
+		if language.Locale == locale {
+			return &domain.Country{
+				Id:   int64(id),
+				Name: language.Name,
+			}, nil
+		}
+	}
+	return &domain.Country{}, nil
 }
 
 func (pImpl *ProjectImpl) tblProject() *gorm.DB {
