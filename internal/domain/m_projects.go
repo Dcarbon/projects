@@ -34,8 +34,9 @@ type Project struct {
 	Area         float64            `json:"area,omitempty"            `                                  //
 	Descs        []*ProjectDesc     `json:"descs,omitempty"           gorm:"foreignKey:ProjectId"`       //
 	Images       []*ProjectImage    `json:"images,omitempty"          gorm:"foreignKey:ProjectId"`       //
-	CreatedAt    time.Time          `json:"createdAt"                 `                                  //
-	UpdatedAt    time.Time          `json:"updatedAt"                 `                                  //
+	Thumbnail    string             `json:"thumbnail"`
+	CreatedAt    time.Time          `json:"createdAt"                 ` //
+	UpdatedAt    time.Time          `json:"updatedAt"                 ` //
 	Type         int64              `json:"type" gorm:"column:type"`
 	Unit         float32            `json:"unit" gorm:"column:unit"`
 	CountryId    int64              `gorm:"column:country_id"`

@@ -53,6 +53,7 @@ type RProjectGetList struct {
 type RProjectAddImage struct {
 	ProjectId int64  `json:"projectId"`
 	ImgPath   string `json:"imgPath"`
+	Type      int32
 }
 
 func (rproject *RProjectCreate) ToProject() *Project {

@@ -102,11 +102,7 @@ func (sv *Service) UpdateSpecs(ctx context.Context, req *pb.RPUpdateSpecs,
 
 func (sv *Service) AddImage(ctx context.Context, req *pb.RPAddImage,
 ) (*pb.String, error) {
-	path, err := sv.storage.UploadToProject(req.Image, req.ProjectId)
-	if err != nil {
-		return nil, err
-	}
-	image, err := sv.iProject.AddImage(&domain.RProjectAddImage{ProjectId: req.ProjectId, ImgPath: path})
+	image, err := sv.iProject.AddImage(&domain.RProjectAddImage{ProjectId: req.ProjectId, ImgPath: req.Image, Type: req.Type})
 	if err != nil {
 		return nil, err
 	}

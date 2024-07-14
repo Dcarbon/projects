@@ -161,18 +161,30 @@ func (pImpl *ProjectImpl) GetOwner(projectId int64) (string, error) {
 	return owner, nil
 }
 
-func (pImpl *ProjectImpl) AddImage(req *domain.RProjectAddImage,
-) (*domain.ProjectImage, error) {
-	var img = &domain.ProjectImage{
+func (pImpl *ProjectImpl) AddImage(req *domain.RProjectAddImage) (*domain.ProjectImage, error) {
+	if req.Type != 0 { // Add thumbnail
+		err := pImpl.tblProject().Where("id = ?", req.ProjectId).Update("thumbnail", req.ImgPath).Error
+		if err != nil {
+			return nil, dmodels.ParsePostgresError("AddImage", err)
+		}
+		return &domain.ProjectImage{
+			ProjectId: req.ProjectId,
+			Image:     req.ImgPath,
+			CreatedAt: time.Now(),
+		}, nil
+	}
+	img := &domain.ProjectImage{
 		ProjectId: req.ProjectId,
 		Image:     req.ImgPath,
 		CreatedAt: time.Now(),
 	}
-	var err = pImpl.tblImage().Create(img).Error
-	if nil != err {
-		return nil, dmodels.ParsePostgresError("AddImage ", err)
+
+	err := pImpl.tblImage().Create(img).Error
+	if err != nil {
+		return nil, dmodels.ParsePostgresError("AddImage", err)
 	}
-	return img, nil
+
+	return nil, nil
 }
 
 func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, error) {
