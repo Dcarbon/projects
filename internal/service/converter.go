@@ -12,6 +12,7 @@ func convertProject(in *domain.Project) *pb.Project {
 		return nil
 	}
 	var rs = &pb.Project{
+		Thumbnail:    in.Thumbnail,
 		Id:           in.Id,
 		Owner:        in.Owner.String(),
 		LocationName: in.LocationName,
