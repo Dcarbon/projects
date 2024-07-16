@@ -1,4 +1,4 @@
-TAG=dcarbon/projects:prod2
+TAG=dcarbon/projects:prod.1
 
 docker build -t $TAG .
 if [[ "$1" == "push" ]];then

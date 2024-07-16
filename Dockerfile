@@ -11,4 +11,6 @@ RUN go mod tidy && go build -buildvcs=false -o projects && \
 FROM dcarbon/dimg:minimal
 COPY --from=builder /usr/bin/projects /usr/bin/projects
 
+COPY --from=builder /dcarbon/projects/json /json
+
 CMD [ "projects" ]

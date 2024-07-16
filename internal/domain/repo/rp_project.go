@@ -2,7 +2,6 @@ package repo
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -189,7 +188,7 @@ func (pImpl *ProjectImpl) AddImage(req *domain.RProjectAddImage) (*domain.Projec
 
 func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, error) {
 
-	jsonPath := "internal/rss/country.json"
+	jsonPath := "json/country.json"
 	jsonFile, err := os.Open(jsonPath)
 	if err != nil {
 		return &domain.Country{}, dmodels.ParsePostgresError("Get Country ", err)
@@ -199,7 +198,6 @@ func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, er
 	countries := map[string][]domain.Language{}
 	_ = json.Unmarshal(jsonByte, &countries)
 	for _, language := range countries[strconv.Itoa(id)] {
-		fmt.Println(language.Name)
 		if language.Locale == locale {
 			return &domain.Country{
 				Id:   int64(id),
