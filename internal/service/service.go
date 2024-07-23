@@ -122,16 +122,22 @@ func (sv *Service) GetById(ctx context.Context, req *pb.RPGetById,
 
 func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,
 ) (*pb.Projects, error) {
-	data, err := sv.iProject.GetList(&domain.RProjectGetList{
-		Skip:  int(req.Skip),
-		Limit: int(req.Limit),
-		Owner: req.Owner,
+	count, data, err := sv.iProject.GetList(&domain.RProjectGetList{
+		Skip:        int(req.Skip),
+		Limit:       int(req.Limit),
+		Owner:       req.OwnerId,
+		Unit:        int64(req.Unit),
+		CountryId:   req.CountryId,
+		Type:        int64(req.Type),
+		SearchValue: req.SearchValue,
+		Location:    req.Location,
 	})
 	if nil != err {
 		return nil, err
 	}
 	return &pb.Projects{
-		Data: convertArr[domain.Project, pb.Project](data, convertProject),
+		Total: *count,
+		Data:  convertArr[domain.Project, pb.Project](data, convertProject),
 	}, nil
 }
 

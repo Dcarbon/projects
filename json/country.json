@@ -2,21 +2,25 @@
     "1":[
         {
             "locale":"vi",
-            "name":"Việt Nam"                    
+            "name":"Việt Nam",
+            "country_code":"VN"                    
         },
         {
             "locale":"en",
-            "name":"Viet Nam"                    
+            "name":"Viet Nam",                    
+            "country_code":"VN"                    
         }
       ],
       "2":[
         {
             "locale":"vi",
-            "name":"Úc"                    
+            "name":"Úc",
+            "country_code":"AU"                    
         },
         {
             "locale":"en",
-            "name":"Australia"                    
+            "name":"Australia",
+            "country_code":"AU"                                        
         }
       ]
 }

@@ -2,6 +2,7 @@ package repo
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -108,27 +109,44 @@ func (pImpl *ProjectImpl) GetById(id int64, lang string,
 }
 
 func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
-) ([]*domain.Project, error) {
-	var tbl = pImpl.tblProject().Offset(filter.Skip)
-	if filter.Limit > 0 {
-		tbl = tbl.Limit(filter.Limit)
-	}
-
-	if filter.Owner != "" {
-		tbl = tbl.Where("owner = ?", filter.Owner)
-	}
-
+) (*int64, []*domain.Project, error) {
+	var count int64
+	var tbl = pImpl.tblProject()
 	var data = make([]*domain.Project, 0)
-	var err = tbl.Preload("Descs").Find(&data).Error
-	if nil != err {
-		return nil, dmodels.ParsePostgresError("Project", err)
-	}
-	for _, dat := range data {
-		country, _ := pImpl.GetCountry(int(dat.CountryId), "vi")
-		dat.Country = country
+	if filter.SearchValue != "" {
+		fmt.Println(filter.SearchValue) //TODO: fix search
+	} else {
+		if filter.Owner != 0 {
+			tbl = tbl.Where("owner_id = ?", filter.Owner)
+		}
+		if filter.CountryId != 0 {
+			tbl = tbl.Where("country_id = ?", filter.CountryId)
+		}
+		if filter.Type != 0 {
+			tbl = tbl.Where("type = ?", filter.Type)
+			if filter.GetUnit() != "" {
+				tbl = tbl.Where(filter.GetUnit())
+			}
+		}
+		if filter.Location != "" {
+			tbl = tbl.Where("location_name LIKE ?", `%`+filter.Location+`%`)
+		}
+		tbl.Count(&count).Offset(filter.Skip)
+		if filter.Limit > 0 {
+			tbl = tbl.Limit(filter.Limit)
+		}
+		var err = tbl.Preload("Descs").Find(&data).Error
+		if nil != err {
+			return nil, nil, dmodels.ParsePostgresError("Project", err)
+		}
+		for _, dat := range data {
+			country, _ := pImpl.GetCountry(int(dat.CountryId), "vi") //TODO: fix 'vi'
+			dat.Country = country
 
+		}
 	}
-	return data, nil
+
+	return &count, data, nil
 }
 
 func (pImpl *ProjectImpl) GetByID(id int64) (*domain.Project, error) {
@@ -202,6 +220,7 @@ func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, er
 			return &domain.Country{
 				Id:   int64(id),
 				Name: language.Name,
+				Code: language.CountryCode,
 			}, nil
 		}
 	}

@@ -27,8 +27,9 @@ func convertProject(in *domain.Project) *pb.Project {
 		Type:         pb.ProjectType(in.Type),
 		Unit:         in.Unit,
 		Country: &pb.Country{
-			Id:   in.Country.Id,
-			Name: in.Country.Name,
+			Id:          in.Country.Id,
+			Name:        in.Country.Name,
+			CountryCode: in.Country.Code,
 		},
 	}
 	return rs

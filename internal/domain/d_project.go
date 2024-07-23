@@ -1,8 +1,10 @@
 package domain
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/Dcarbon/arch-proto/pb"
 	"github.com/Dcarbon/go-shared/dmodels"
 )
 
@@ -13,7 +15,7 @@ type IProject interface {
 	UpdateSpecs(req *RProjectUpdateSpecs) (*ProjectSpecs, error)
 
 	GetById(id int64, lang string) (*Project, error)
-	GetList(filter *RProjectGetList) ([]*Project, error)
+	GetList(filter *RProjectGetList) (*int64, []*Project, error)
 	GetOwner(projectId int64) (string, error)
 
 	AddImage(*RProjectAddImage) (*ProjectImage, error)
@@ -45,9 +47,14 @@ type RProjectUpdateSpecs struct {
 }
 
 type RProjectGetList struct {
-	Skip  int    `json:"skip" form:"skip"`
-	Limit int    `json:"limit" form:"limit;max=50"`
-	Owner string `json:"owner" form:"owner"`
+	Skip        int    `json:"skip" form:"skip"`
+	Limit       int    `json:"limit" form:"limit;max=50"`
+	Owner       int64  `json:"owner" form:"owner"`
+	Unit        int64  ``
+	Type        int64  ``
+	CountryId   int32  ``
+	SearchValue string ``
+	Location    string
 }
 
 type RProjectAddImage struct {
@@ -98,4 +105,29 @@ func (rspec *RProjectUpdateSpecs) ToProjectSpecs() *ProjectSpecs {
 		ProjectId: rspec.ProjectId,
 		Specs:     rspec.Specs,
 	}
+}
+
+func (p RProjectGetList) GetUnit() string {
+	var query string
+	var ranges [][2]int
+
+	switch p.Type {
+	case int64(*pb.ProjectType_PrjT_E.Enum()):
+		ranges = [][2]int{{1, 20}, {20, 100}, {100, -1}}
+	case int64(*pb.ProjectType_PrjT_G.Enum()), int64(*pb.ProjectType_PrjT_S.Enum()):
+		ranges = [][2]int{{40, 90}, {90, 200}, {200, -1}}
+	}
+
+	if len(ranges) > 0 {
+		switch p.Unit {
+		case 1:
+			query = fmt.Sprintf("unit >= %d AND unit < %d", ranges[0][0], ranges[0][1])
+		case 2:
+			query = fmt.Sprintf("unit >= %d AND unit < %d", ranges[1][0], ranges[1][1])
+		case 3:
+			query = fmt.Sprintf("unit >= %d", ranges[2][0])
+		}
+	}
+
+	return query
 }

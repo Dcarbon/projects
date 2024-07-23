@@ -27,6 +27,7 @@ const (
 type Project struct {
 	Id           int64              `json:"id"                        gorm:"primaryKey"`                 //
 	Owner        dmodels.EthAddress `json:"owner"                     gorm:"index"`                      // ETH address
+	OwnerId      int64              `json:"owner"                     gorm:"index"`                      // ETH address
 	Status       ProjectStatus      `json:"status"                    `                                  //
 	LocationName string             `json:"locationName,omitempty"    `                                  //
 	Location     *dmodels.Coord     `json:"location"                  gorm:"type:geometry(POINT, 4326)"` //
@@ -94,10 +95,12 @@ func (m *MapSFloat) Scan(value interface{}) error {
 type Country struct {
 	Id   int64  `json:"id"  `
 	Name string `json:"name"`
+	Code string `json:"code"`
 }
 type Language struct {
-	Locale string `json:"locale"`
-	Name   string `json:"name"`
+	Locale      string `json:"locale"`
+	Name        string `json:"name"`
+	CountryCode string `json:"country_code"`
 }
 
 func (m MapSFloat) Value() (driver.Value, error) {
