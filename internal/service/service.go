@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Dcarbon/projects/internal/domain/repo"
 
@@ -68,6 +69,7 @@ func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 		Unit:         float32(req.Unit),
 		CountryId:    req.CountryId,
 		OwnerId:      req.OwnerId,
+		Iframe:       req.Iframe,
 	})
 	if err != nil {
 		return nil, err
@@ -140,6 +142,26 @@ func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,
 		Total: *count,
 		Data:  convertArr[domain.Project, pb.Project](data, convertProject),
 	}, nil
+}
+
+func (sv *Service) Update(ctx context.Context, req *pb.RPUpdate,
+) (*pb.Int64, error) {
+	id, err := sv.iProject.Update(&domain.RProjectUpdate{
+		ProjectId:    req.ProjectId,
+		Owner:        dmodels.EthAddress(req.Owner),
+		Location:     dmodels.NewCoord4326(req.Location.Longitude, req.Location.Latitude),
+		LocationName: req.LocationName,
+		Type:         int64(req.Type),
+		Unit:         float32(req.Unit),
+		CountryId:    req.CountryId,
+		OwnerId:      req.OwnerId,
+		Iframe:       req.Iframe,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return &pb.Int64{Data: *id}, nil
 }
 
 // func (sv *Service) isProjectOwner(ctx context.Context, projectId int64,

@@ -53,6 +53,11 @@ var config = gutils.Config{
 			Permission: "project-info-get-list",
 			PermDesc:   "",
 		},
+		"/pb.ProjectService/Update": {
+			Require:    true,
+			Permission: "project-info-update",
+			PermDesc:   "",
+		},
 	},
 }
 

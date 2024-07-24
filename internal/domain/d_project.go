@@ -11,6 +11,7 @@ import (
 type IProject interface {
 	Create(req *RProjectCreate) (*Project, error)
 
+	Update(req *RProjectUpdate) (*int64, error)
 	UpdateDesc(req *RProjectUpdateDesc) (*ProjectDesc, error)
 	UpdateSpecs(req *RProjectUpdateSpecs) (*ProjectSpecs, error)
 
@@ -34,6 +35,20 @@ type RProjectCreate struct {
 	Unit         float32               ``
 	CountryId    int64                 ``
 	OwnerId      int64                 ``
+	Iframe       string                ``
+}
+
+type RProjectUpdate struct {
+	ProjectId    int64              ``
+	CountryId    int64              ``
+	OwnerId      int64              ``
+	Type         int64              ``
+	Unit         float32            ``
+	Thumbnail    string             ``
+	Owner        dmodels.EthAddress ``
+	Location     *dmodels.Coord     ``
+	LocationName string             ``
+	Iframe       string             ``
 }
 
 type RProjectUpdateDesc struct {
@@ -81,11 +96,9 @@ func (rproject *RProjectCreate) ToProject() *Project {
 		Type:         int64(rproject.Type),
 		Unit:         rproject.Unit,
 	}
-
 	for i, desc := range rproject.Descs {
 		project.Descs[i] = desc.ToProjectDesc()
 	}
-
 	return project
 }
 

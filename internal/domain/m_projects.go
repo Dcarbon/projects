@@ -42,6 +42,7 @@ type Project struct {
 	Unit         float32            `json:"unit" gorm:"column:unit"`
 	CountryId    int64              `gorm:"column:country_id"`
 	Country      *Country           `json:"country" gorm:"-"`
+	Iframe       string             `json:"iframe" gorm:"iframe"`
 } //@name Project
 
 func (*Project) TableName() string { return TableNameProject }
