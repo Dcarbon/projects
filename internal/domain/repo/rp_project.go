@@ -47,6 +47,8 @@ func (pImpl *ProjectImpl) Create(req *domain.RProjectCreate,
 	}); err != nil {
 		return nil, err
 	}
+	country, _ := pImpl.GetCountry(int(project.CountryId), "vi") //TODO: fix 'vi'
+	project.Country = country
 	return project, nil
 }
 

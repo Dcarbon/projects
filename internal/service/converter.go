@@ -26,11 +26,19 @@ func convertProject(in *domain.Project) *pb.Project {
 		Area:         in.Area,
 		Type:         pb.ProjectType(in.Type),
 		Unit:         in.Unit,
-		Country: &pb.Country{
-			Id:          in.Country.Id,
-			Name:        in.Country.Name,
-			CountryCode: in.Country.Code,
-		},
+		Country:      convertCountry(in.Country),
+	}
+	return rs
+}
+
+func convertCountry(in *domain.Country) *pb.Country {
+	if nil == in {
+		return nil
+	}
+	var rs = &pb.Country{
+		Id:          in.Id,
+		Name:        in.Name,
+		CountryCode: in.Code,
 	}
 	return rs
 }

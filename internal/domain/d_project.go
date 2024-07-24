@@ -30,8 +30,10 @@ type RProjectCreate struct {
 	Descs        []*RProjectUpdateDesc ``
 	Area         float64               ``
 	LocationName string                ``
-	Type         int32
-	Unit         float32
+	Type         int32                 ``
+	Unit         float32               ``
+	CountryId    int64                 ``
+	OwnerId      int64                 ``
 }
 
 type RProjectUpdateDesc struct {
@@ -74,6 +76,10 @@ func (rproject *RProjectCreate) ToProject() *Project {
 		Descs:        make([]*ProjectDesc, len(rproject.Descs)),
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
+		OwnerId:      rproject.OwnerId,
+		CountryId:    rproject.CountryId,
+		Type:         int64(rproject.Type),
+		Unit:         rproject.Unit,
 	}
 
 	for i, desc := range rproject.Descs {

@@ -64,13 +64,14 @@ func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 		Descs:        descs,
 		Area:         0, //TODO: fix Area
 		LocationName: req.LocationName,
-		Type:         int32(req.GetType()),
+		Type:         int32(req.Type),
 		Unit:         float32(req.Unit),
+		CountryId:    req.CountryId,
+		OwnerId:      req.OwnerId,
 	})
 	if err != nil {
 		return nil, err
 	}
-
 	return convertProject(project), nil
 }
 
