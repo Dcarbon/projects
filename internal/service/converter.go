@@ -36,7 +36,7 @@ func convertCountry(in *domain.Country) *pb.Country {
 		return nil
 	}
 	var rs = &pb.Country{
-		Id:          in.Id,
+		//Id:          in.Id,
 		Name:        in.Name,
 		CountryCode: in.Code,
 	}

@@ -2,10 +2,9 @@ package repo
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
-	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Dcarbon/go-shared/dmodels"
@@ -47,7 +46,7 @@ func (pImpl *ProjectImpl) Create(req *domain.RProjectCreate,
 	}); err != nil {
 		return nil, err
 	}
-	country, _ := pImpl.GetCountry(int(project.CountryId), "vi") //TODO: fix 'vi'
+	country, _ := pImpl.GetCountry(project.CountryId, "vi") //TODO: fix 'vi'
 	project.Country = country
 	return project, nil
 }
@@ -105,7 +104,7 @@ func (pImpl *ProjectImpl) GetById(id int64, lang string,
 	if nil != err {
 		return nil, dmodels.ParsePostgresError("Project", err)
 	}
-	country, _ := pImpl.GetCountry(int(project.CountryId), lang)
+	country, _ := pImpl.GetCountry(project.CountryId, lang)
 	project.Country = country
 	return project, nil
 }
@@ -115,37 +114,41 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 	var count int64
 	var tbl = pImpl.tblProject()
 	var data = make([]*domain.Project, 0)
-	if filter.SearchValue != "" {
-		fmt.Println(filter.SearchValue) //TODO: fix search
-	} else {
-		if filter.Owner != 0 {
-			tbl = tbl.Where("owner_id = ?", filter.Owner)
-		}
-		if filter.CountryId != 0 {
-			tbl = tbl.Where("country_id = ?", filter.CountryId)
-		}
-		if filter.Type != 0 {
-			tbl = tbl.Where("type = ?", filter.Type)
-			if filter.GetUnit() != "" {
-				tbl = tbl.Where(filter.GetUnit())
-			}
-		}
-		if filter.Location != "" {
-			tbl = tbl.Where("location_name LIKE ?", `%`+filter.Location+`%`)
-		}
-		tbl.Count(&count).Offset(filter.Skip)
-		if filter.Limit > 0 {
-			tbl = tbl.Limit(filter.Limit)
-		}
-		var err = tbl.Preload("Descs").Find(&data).Error
-		if nil != err {
-			return nil, nil, dmodels.ParsePostgresError("Project", err)
-		}
-		for _, dat := range data {
-			country, _ := pImpl.GetCountry(int(dat.CountryId), "vi") //TODO: fix 'vi'
-			dat.Country = country
 
+	if filter.SearchValue != "" {
+		tbl = tbl.Joins("JOIN projects_desc on projects_desc.project_id = projects.id").
+			Where("projects_desc.name LIKE ?", "%"+filter.SearchValue+"%")
+	}
+
+	if filter.Owner != 0 {
+		tbl = tbl.Where("owner_id = ?", filter.Owner)
+	}
+	if filter.CountryId != "" {
+		tbl = tbl.Where("UPPER(country_id) = ?", strings.ToUpper(filter.CountryId))
+	}
+	if filter.Type != 0 {
+		tbl = tbl.Where("type = ?", filter.Type)
+		if filter.GetUnit() != "" {
+			tbl = tbl.Where(filter.GetUnit())
 		}
+	}
+	if filter.Location != "" {
+		tbl = tbl.Where("location_name LIKE ?", "%"+filter.Location+"%")
+	}
+
+	tbl.Count(&count).Offset(filter.Skip)
+	if filter.Limit > 0 {
+		tbl = tbl.Limit(filter.Limit)
+	}
+
+	err := tbl.Preload("Descs").Order("created_at DESC").Find(&data).Error
+	if err != nil {
+		return nil, nil, dmodels.ParsePostgresError("Project", err)
+	}
+
+	for _, dat := range data {
+		country, _ := pImpl.GetCountry(dat.CountryId, "vi") // TODO: fix 'vi'
+		dat.Country = country
 	}
 
 	return &count, data, nil
@@ -206,7 +209,7 @@ func (pImpl *ProjectImpl) AddImage(req *domain.RProjectAddImage) (*domain.Projec
 	return nil, nil
 }
 
-func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, error) {
+func (pImpl *ProjectImpl) GetCountry(id string, locale string) (*domain.Country, error) {
 
 	jsonPath := "json/country.json"
 	jsonFile, err := os.Open(jsonPath)
@@ -217,10 +220,10 @@ func (pImpl *ProjectImpl) GetCountry(id int, locale string) (*domain.Country, er
 	jsonByte, _ := io.ReadAll(jsonFile)
 	countries := map[string][]domain.Language{}
 	_ = json.Unmarshal(jsonByte, &countries)
-	for _, language := range countries[strconv.Itoa(id)] {
+	for _, language := range countries[id] {
 		if language.Locale == locale {
 			return &domain.Country{
-				Id:   int64(id),
+				Id:   id,
 				Name: language.Name,
 				Code: language.CountryCode,
 			}, nil

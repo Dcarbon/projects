@@ -40,7 +40,7 @@ type Project struct {
 	UpdatedAt    time.Time          `json:"updatedAt"                 ` //
 	Type         int64              `json:"type" gorm:"column:type"`
 	Unit         float32            `json:"unit" gorm:"column:unit"`
-	CountryId    int64              `gorm:"column:country_id"`
+	CountryId    string             `gorm:"column:country_id"`
 	Country      *Country           `json:"country" gorm:"-"`
 	Iframe       string             `json:"iframe" gorm:"iframe"`
 } //@name Project
@@ -94,7 +94,7 @@ func (m *MapSFloat) Scan(value interface{}) error {
 }
 
 type Country struct {
-	Id   int64  `json:"id"  `
+	Id   string `json:"id"  `
 	Name string `json:"name"`
 	Code string `json:"code"`
 }

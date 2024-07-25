@@ -21,7 +21,7 @@ type IProject interface {
 
 	AddImage(*RProjectAddImage) (*ProjectImage, error)
 	ChangeStatus(id string, status ProjectStatus) error
-	GetCountry(id int, vi string) (*Country, error)
+	GetCountry(id string, vi string) (*Country, error)
 }
 
 type RProjectCreate struct {
@@ -33,14 +33,14 @@ type RProjectCreate struct {
 	LocationName string                ``
 	Type         int32                 ``
 	Unit         float32               ``
-	CountryId    int64                 ``
+	CountryId    string                ``
 	OwnerId      int64                 ``
 	Iframe       string                ``
 }
 
 type RProjectUpdate struct {
 	ProjectId    int64              ``
-	CountryId    int64              ``
+	CountryId    string             ``
 	OwnerId      int64              ``
 	Type         int64              ``
 	Unit         float32            ``
@@ -69,7 +69,7 @@ type RProjectGetList struct {
 	Owner       int64  `json:"owner" form:"owner"`
 	Unit        int64  ``
 	Type        int64  ``
-	CountryId   int32  ``
+	CountryId   string ``
 	SearchValue string ``
 	Location    string
 }

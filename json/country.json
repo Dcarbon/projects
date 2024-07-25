@@ -1,5 +1,5 @@
 {
-    "1":[
+    "vn":[
         {
             "locale":"vi",
             "name":"Việt Nam",
@@ -11,7 +11,7 @@
             "country_code":"VN"                    
         }
       ],
-      "2":[
+      "au":[
         {
             "locale":"vi",
             "name":"Úc",
