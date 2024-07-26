@@ -27,6 +27,7 @@ func convertProject(in *domain.Project) *pb.Project {
 		Type:         pb.ProjectType(in.Type),
 		Unit:         in.Unit,
 		Country:      convertCountry(in.Country),
+		Iframe:       in.Iframe,
 	}
 	return rs
 }

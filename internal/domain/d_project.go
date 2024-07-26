@@ -95,6 +95,8 @@ func (rproject *RProjectCreate) ToProject() *Project {
 		CountryId:    rproject.CountryId,
 		Type:         int64(rproject.Type),
 		Unit:         rproject.Unit,
+		Iframe:       rproject.Iframe,
+		Area:         rproject.Area,
 	}
 	for i, desc := range rproject.Descs {
 		project.Descs[i] = desc.ToProjectDesc()
