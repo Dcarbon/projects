@@ -27,7 +27,7 @@ const (
 type Project struct {
 	Id           int64              `json:"id"                        gorm:"primaryKey"`                 //
 	Owner        dmodels.EthAddress `json:"owner"                     gorm:"index"`                      // ETH address
-	OwnerId      int64              `json:"owner"                     gorm:"index"`                      // ETH address
+	OwnerId      string             `json:"owner"                     gorm:"index"`                      // ETH address
 	Status       ProjectStatus      `json:"status"                    `                                  //
 	LocationName string             `json:"locationName,omitempty"    `                                  //
 	Location     *dmodels.Coord     `json:"location"                  gorm:"type:geometry(POINT, 4326)"` //

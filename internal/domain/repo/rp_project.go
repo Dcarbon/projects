@@ -120,7 +120,7 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 			Where("projects_desc.name LIKE ?", "%"+filter.SearchValue+"%")
 	}
 
-	if filter.Owner != 0 {
+	if filter.Owner != "" {
 		tbl = tbl.Where("owner_id = ?", filter.Owner)
 	}
 	if filter.CountryId != "" {

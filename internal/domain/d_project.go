@@ -34,14 +34,14 @@ type RProjectCreate struct {
 	Type         int32                 ``
 	Unit         float32               ``
 	CountryId    string                ``
-	OwnerId      int64                 ``
+	OwnerId      string                ``
 	Iframe       string                ``
 }
 
 type RProjectUpdate struct {
 	ProjectId    int64              ``
 	CountryId    string             ``
-	OwnerId      int64              ``
+	OwnerId      string             ``
 	Type         int64              ``
 	Unit         float32            ``
 	Thumbnail    string             ``
@@ -66,7 +66,7 @@ type RProjectUpdateSpecs struct {
 type RProjectGetList struct {
 	Skip        int    `json:"skip" form:"skip"`
 	Limit       int    `json:"limit" form:"limit;max=50"`
-	Owner       int64  `json:"owner" form:"owner"`
+	Owner       string `json:"owner" form:"owner"`
 	Unit        int64  ``
 	Type        int64  ``
 	CountryId   string ``
