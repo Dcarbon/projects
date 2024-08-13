@@ -58,6 +58,11 @@ var config = gutils.Config{
 			Permission: "project-info-update",
 			PermDesc:   "",
 		},
+		"/pb.ProjectService/ChangeStatus": {
+			Require:    true,
+			Permission: "project-info-update",
+			PermDesc:   "",
+		},
 	},
 }
 

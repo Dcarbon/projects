@@ -20,7 +20,7 @@ type IProject interface {
 	GetOwner(projectId int64) (string, error)
 
 	AddImage(*RProjectAddImage) (*ProjectImage, error)
-	ChangeStatus(id string, status ProjectStatus) error
+	ChangeStatus(id int, status ProjectStatus) error
 	GetCountry(id string, vi string) (*Country, error)
 }
 
@@ -72,6 +72,7 @@ type RProjectGetList struct {
 	CountryId   string ``
 	SearchValue string ``
 	Location    string
+	Status      int
 }
 
 type RProjectAddImage struct {

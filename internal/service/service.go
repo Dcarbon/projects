@@ -123,6 +123,14 @@ func (sv *Service) GetById(ctx context.Context, req *pb.RPGetById,
 	return response, nil
 }
 
+func (sv *Service) ChangeStatus(ctx context.Context, req *pb.RPChangeStatus,
+) (*pb.Int64, error) {
+	if err := sv.iProject.ChangeStatus(int(req.ProjectId), domain.ProjectStatus(req.Status)); nil != err {
+		return nil, err
+	}
+	return &pb.Int64{Data: req.ProjectId}, nil
+}
+
 func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,
 ) (*pb.Projects, error) {
 	count, data, err := sv.iProject.GetList(&domain.RProjectGetList{
@@ -134,6 +142,7 @@ func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,
 		Type:        int64(req.Type),
 		SearchValue: req.SearchValue,
 		Location:    req.Location,
+		Status:      int(req.Status),
 	})
 	if nil != err {
 		return nil, err

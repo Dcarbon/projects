@@ -119,7 +119,9 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 		tbl = tbl.Joins("JOIN projects_desc on projects_desc.project_id = projects.id").
 			Where("projects_desc.name LIKE ?", "%"+filter.SearchValue+"%")
 	}
-
+	if filter.Status != 0 {
+		tbl = tbl.Where("status = ?", filter.Status)
+	}
 	if filter.Owner != "" {
 		tbl = tbl.Where("owner_id = ?", filter.Owner)
 	}
@@ -163,7 +165,7 @@ func (pImpl *ProjectImpl) GetByID(id int64) (*domain.Project, error) {
 	return data, nil
 }
 
-func (pImpl *ProjectImpl) ChangeStatus(id string, status domain.ProjectStatus,
+func (pImpl *ProjectImpl) ChangeStatus(id int, status domain.ProjectStatus,
 ) error {
 	var err = pImpl.tblProject().
 		Where("id = ?", id).
