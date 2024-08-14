@@ -14,7 +14,7 @@ func convertProject(in *domain.Project) *pb.Project {
 	var rs = &pb.Project{
 		Thumbnail:    in.Thumbnail,
 		Id:           in.Id,
-		Owner:        in.Owner.String(),
+		Owner:        in.OwnerId,
 		LocationName: in.LocationName,
 		Location:     convertGPS(in.Location),
 		Status:       int32(in.Status),
