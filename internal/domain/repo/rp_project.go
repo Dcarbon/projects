@@ -143,7 +143,7 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 		tbl = tbl.Limit(filter.Limit)
 	}
 
-	err := tbl.Preload("Descs").Order("created_at DESC").Find(&data).Error
+	err := tbl.Preload("Descs").Preload("Specs").Order("created_at DESC").Find(&data).Error
 	if err != nil {
 		return nil, nil, dmodels.ParsePostgresError("Project", err)
 	}
