@@ -8,6 +8,8 @@ import (
 )
 
 func convertProject(in *domain.Project) *pb.Project {
+	types := map[int]string{0: "None", 1: "Biomass to Gasification", 2: "Biogas to Electricity", 3: "Model S"}
+
 	if nil == in {
 		return nil
 	}
@@ -28,6 +30,10 @@ func convertProject(in *domain.Project) *pb.Project {
 		Unit:         in.Unit,
 		Country:      convertCountry(in.Country),
 		Iframe:       in.Iframe,
+		DetailType: &pb.Type{
+			Id:   int32(in.Type),
+			Name: types[int(in.Type)],
+		},
 	}
 	return rs
 }

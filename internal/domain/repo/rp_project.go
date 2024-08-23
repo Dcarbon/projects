@@ -122,6 +122,9 @@ func (pImpl *ProjectImpl) GetList(filter *domain.RProjectGetList,
 	if filter.Status != 0 {
 		tbl = tbl.Where("status = ?", filter.Status)
 	}
+	if len(filter.Ids) > 0 {
+		tbl = tbl.Where("id IN ?", filter.Ids)
+	}
 	if filter.Owner != "" {
 		tbl = tbl.Where("owner_id = ?", filter.Owner)
 	}

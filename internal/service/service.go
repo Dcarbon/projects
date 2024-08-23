@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/Dcarbon/projects/internal/domain/repo"
 
@@ -133,6 +135,20 @@ func (sv *Service) ChangeStatus(ctx context.Context, req *pb.RPChangeStatus,
 
 func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,
 ) (*pb.Projects, error) {
+	intArray := []int{}
+	if strings.TrimSpace(req.Ids) != "" {
+		datas := strings.Split(req.Ids, ",")
+		// Convert each string to an integer
+		for _, s := range datas {
+			// Convert string to integer
+			num, err := strconv.Atoi(strings.TrimSpace(s))
+			if err != nil {
+				fmt.Printf("Error converting string to int: %v\n", err)
+				return nil, err
+			}
+			intArray = append(intArray, num) // Append the converted integer to intArray
+		}
+	}
 	count, data, err := sv.iProject.GetList(&domain.RProjectGetList{
 		Skip:        int(req.Skip),
 		Limit:       int(req.Limit),
@@ -143,6 +159,7 @@ func (sv *Service) GetList(ctx context.Context, req *pb.RPGetList,
 		SearchValue: req.SearchValue,
 		Location:    req.Location,
 		Status:      int(req.Status),
+		Ids:         intArray,
 	})
 	if nil != err {
 		return nil, err

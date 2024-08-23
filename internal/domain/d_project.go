@@ -71,8 +71,9 @@ type RProjectGetList struct {
 	Type        int64  ``
 	CountryId   string ``
 	SearchValue string ``
-	Location    string
-	Status      int
+	Location    string ``
+	Status      int    ``
+	Ids         []int  ``
 }
 
 type RProjectAddImage struct {
