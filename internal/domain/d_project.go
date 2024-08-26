@@ -135,9 +135,9 @@ func (p RProjectGetList) GetUnit() string {
 	var ranges [][2]int
 
 	switch p.Type {
-	case int64(*pb.ProjectType_PrjT_E.Enum()):
+	case int64(*pb.ProjectType_PrjT_G.Enum()):
 		ranges = [][2]int{{1, 20}, {20, 100}, {100, -1}}
-	case int64(*pb.ProjectType_PrjT_G.Enum()), int64(*pb.ProjectType_PrjT_S.Enum()):
+	case int64(*pb.ProjectType_PrjT_E.Enum()), int64(*pb.ProjectType_PrjT_S.Enum()):
 		ranges = [][2]int{{40, 90}, {90, 200}, {200, -1}}
 	}
 
