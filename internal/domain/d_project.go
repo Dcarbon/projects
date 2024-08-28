@@ -136,9 +136,9 @@ func (p RProjectGetList) GetUnit() string {
 
 	switch p.Type {
 	case int64(*pb.ProjectType_PrjT_G.Enum()):
-		ranges = [][2]int{{1, 20}, {20, 100}, {100, -1}}
+		ranges = [][2]int{{0, 20}, {20, 100}, {100, -1}}
 	case int64(*pb.ProjectType_PrjT_E.Enum()), int64(*pb.ProjectType_PrjT_S.Enum()):
-		ranges = [][2]int{{40, 90}, {90, 200}, {200, -1}}
+		ranges = [][2]int{{0, 90}, {90, 200}, {200, -1}}
 	}
 
 	if len(ranges) > 0 {
@@ -146,9 +146,9 @@ func (p RProjectGetList) GetUnit() string {
 		case 1:
 			query = fmt.Sprintf("unit >= %d AND unit < %d", ranges[0][0], ranges[0][1])
 		case 2:
-			query = fmt.Sprintf("unit >= %d AND unit < %d", ranges[1][0], ranges[1][1])
+			query = fmt.Sprintf("unit >= %d AND unit <= %d", ranges[1][0], ranges[1][1])
 		case 3:
-			query = fmt.Sprintf("unit >= %d", ranges[2][0])
+			query = fmt.Sprintf("unit > %d", ranges[2][0])
 		}
 	}
 
