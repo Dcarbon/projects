@@ -72,6 +72,7 @@ func (sv *Service) Create(ctx context.Context, req *pb.RPCreate,
 		CountryId:    req.CountryId,
 		OwnerId:      req.OwnerId,
 		Iframe:       req.Iframe,
+		OwnerAddress: req.OwnerAddress,
 	})
 	if err != nil {
 		return nil, err
@@ -182,6 +183,7 @@ func (sv *Service) Update(ctx context.Context, req *pb.RPUpdate,
 		CountryId:    req.CountryId,
 		OwnerId:      req.OwnerId,
 		Iframe:       req.Iframe,
+		OwnerAddress: req.OwnerAddress,
 	})
 	if err != nil {
 		fmt.Println(err)

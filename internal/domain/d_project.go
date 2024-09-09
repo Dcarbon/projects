@@ -36,6 +36,7 @@ type RProjectCreate struct {
 	CountryId    string                ``
 	OwnerId      string                ``
 	Iframe       string                ``
+	OwnerAddress string                ``
 }
 
 type RProjectUpdate struct {
@@ -49,6 +50,7 @@ type RProjectUpdate struct {
 	Location     *dmodels.Coord     ``
 	LocationName string             ``
 	Iframe       string             ``
+	OwnerAddress string             ``
 }
 
 type RProjectUpdateDesc struct {
@@ -99,6 +101,7 @@ func (rproject *RProjectCreate) ToProject() *Project {
 		Unit:         rproject.Unit,
 		Iframe:       rproject.Iframe,
 		Area:         rproject.Area,
+		OwnerAddress: rproject.OwnerAddress,
 	}
 	for i, desc := range rproject.Descs {
 		project.Descs[i] = desc.ToProjectDesc()

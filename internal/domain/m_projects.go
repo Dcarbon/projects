@@ -44,6 +44,7 @@ type Project struct {
 	CountryId    string             `gorm:"column:country_id"`
 	Country      *Country           `json:"country" gorm:"-"`
 	Iframe       string             `json:"iframe" gorm:"iframe"`
+	OwnerAddress string             `json:"owner_address" gorm:"owner_address"`
 } //@name Project
 
 func (*Project) TableName() string { return TableNameProject }

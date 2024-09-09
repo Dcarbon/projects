@@ -240,7 +240,7 @@ func (pImpl *ProjectImpl) GetCountry(id string, locale string) (*domain.Country,
 
 func (pImpl *ProjectImpl) Update(req *domain.RProjectUpdate) (*int64, error) {
 	if err := pImpl.tblProject().Select("owner", "owner_id", "location_name", "location",
-		"type", "unit", "country_id", "iframe").
+		"type", "unit", "country_id", "iframe", "owner_address").
 		Where("id = ?", req.ProjectId).Updates(domain.Project{
 		Owner:        dmodels.EthAddress(req.Owner),
 		OwnerId:      req.OwnerId,
@@ -250,6 +250,7 @@ func (pImpl *ProjectImpl) Update(req *domain.RProjectUpdate) (*int64, error) {
 		Unit:         req.Unit,
 		CountryId:    req.CountryId,
 		Iframe:       req.Iframe,
+		OwnerAddress: req.OwnerAddress,
 	}).Error; nil != err {
 		return nil, dmodels.ParsePostgresError("Update Project ", err)
 	}

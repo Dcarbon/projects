@@ -30,6 +30,7 @@ func convertProject(in *domain.Project) *pb.Project {
 		Unit:         in.Unit,
 		Country:      convertCountry(in.Country),
 		Iframe:       in.Iframe,
+		OwnerAddress: in.OwnerAddress,
 		DetailType: &pb.Type{
 			Id:   int32(in.Type),
 			Name: types[int(in.Type)],
