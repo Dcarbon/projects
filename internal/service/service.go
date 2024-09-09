@@ -190,6 +190,48 @@ func (sv *Service) Update(ctx context.Context, req *pb.RPUpdate,
 	return &pb.Int64{Data: *id}, nil
 }
 
+func (sv *Service) UpsertDocument(ctx context.Context, req *pb.RUpsertDocument) (*pb.RPUpsertDocument, error) {
+	documents := []*domain.Document{}
+	for _, val := range req.Documents {
+		documents = append(documents, &domain.Document{
+			Url:          val.Url,
+			ProjectId:    val.ProjectId,
+			DocumentType: val.DocumentType,
+			Id:           val.Id,
+		})
+	}
+	data, err := sv.iProject.UpsertDocument(&domain.RProjectDocumentUpsert{Document: documents})
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.RPUpsertDocument{
+		Documents: convertArr(data, convertDocument),
+	}, nil
+}
+
+func (sv *Service) DeleteDocument(ctx context.Context, req *pb.RDeleteDocument) (*pb.Empty, error) {
+	err := sv.iProject.DeleteDocument(&domain.RProjectDocumentDelete{Id: []int64{req.Id}})
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+func (sv *Service) ListDocument(ctx context.Context, req *pb.RListDocument) (*pb.RPListDocument, error) {
+	data, count, err := sv.iProject.ListDocument(&domain.RProjectDocumentList{
+		Skip:  int(req.Skip),
+		Limit: int(req.Limit),
+		Ids:   req.Ids,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.RPListDocument{
+		Documents: convertArr(data, convertDocument),
+		Total:     count,
+	}, nil
+}
+
 // func (sv *Service) isProjectOwner(ctx context.Context, projectId int64,
 // ) error {
 // 	user, err := mids.GetAuth(r.Request.Context())

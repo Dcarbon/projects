@@ -103,3 +103,18 @@ func convertArr[T any, T2 any](arr []*T, fn func(*T) *T2) []*T2 {
 	}
 	return rs
 }
+
+func convertDocument(in *domain.ProjectDocument) *pb.Document {
+	if nil == in {
+		return nil
+	}
+	var rs = &pb.Document{
+		Id:           in.Id,
+		ProjectId:    in.ProjectId,
+		Url:          in.Url,
+		DocumentType: in.DocumentType,
+		UpdatedAt:    in.CreatedAt.Unix(),
+		CreatedAt:    in.CreatedAt.Unix(),
+	}
+	return rs
+}

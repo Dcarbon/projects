@@ -10,10 +10,11 @@ import (
 )
 
 const (
-	TableNameProject      = "projects"
-	TableNameProjectDesc  = "projects_desc"
-	TableNameProjectSpecs = "projects_specs"
-	TableNameProjectImage = "projects_image"
+	TableNameProject         = "projects"
+	TableNameProjectDesc     = "projects_desc"
+	TableNameProjectDocument = "projects_document"
+	TableNameProjectSpecs    = "projects_specs"
+	TableNameProjectImage    = "projects_image"
 )
 
 type ProjectStatus int

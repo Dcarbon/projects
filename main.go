@@ -63,6 +63,21 @@ var config = gutils.Config{
 			Permission: "project-info-update",
 			PermDesc:   "",
 		},
+		"/pb.ProjectService/UpsertDocument": {
+			Require:    true,
+			Permission: "upsert-document",
+			PermDesc:   "",
+		},
+		"/pb.ProjectService/DeleteDocument": {
+			Require:    true,
+			Permission: "delete-document",
+			PermDesc:   "",
+		},
+		"/pb.ProjectService/ListDocument": {
+			Require:    true,
+			Permission: "delete-document",
+			PermDesc:   "",
+		},
 	},
 }
 

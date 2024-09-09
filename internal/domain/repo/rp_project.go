@@ -23,6 +23,7 @@ func NewProjectImpl(db *gorm.DB) (*ProjectImpl, error) {
 		&domain.ProjectImage{},
 		&domain.ProjectSpecs{},
 		&domain.ProjectDesc{},
+		&domain.ProjectDocument{},
 	)
 	if nil != err {
 		return nil, err
@@ -269,4 +270,8 @@ func (pImpl *ProjectImpl) tblProjectSpec() *gorm.DB {
 
 func (pImpl *ProjectImpl) tblImage() *gorm.DB {
 	return pImpl.db.Table(domain.TableNameProjectImage)
+}
+
+func (pImpl *ProjectImpl) tblDocument() *gorm.DB {
+	return pImpl.db.Table(domain.TableNameProjectDocument)
 }

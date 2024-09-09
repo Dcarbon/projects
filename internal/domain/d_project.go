@@ -10,18 +10,18 @@ import (
 
 type IProject interface {
 	Create(req *RProjectCreate) (*Project, error)
-
 	Update(req *RProjectUpdate) (*int64, error)
 	UpdateDesc(req *RProjectUpdateDesc) (*ProjectDesc, error)
 	UpdateSpecs(req *RProjectUpdateSpecs) (*ProjectSpecs, error)
-
 	GetById(id int64, lang string) (*Project, error)
 	GetList(filter *RProjectGetList) (*int64, []*Project, error)
 	GetOwner(projectId int64) (string, error)
-
 	AddImage(*RProjectAddImage) (*ProjectImage, error)
 	ChangeStatus(id int, status ProjectStatus) error
 	GetCountry(id string, vi string) (*Country, error)
+	UpsertDocument(req *RProjectDocumentUpsert) ([]*ProjectDocument, error)
+	ListDocument(req *RProjectDocumentList) ([]*ProjectDocument, int64, error)
+	DeleteDocument(req *RProjectDocumentDelete) error
 }
 
 type RProjectCreate struct {
@@ -153,4 +153,25 @@ func (p RProjectGetList) GetUnit() string {
 	}
 
 	return query
+}
+
+type Document struct {
+	Url          string
+	DocumentType string
+	ProjectId    int64
+	Id           int64
+}
+
+type RProjectDocumentUpsert struct {
+	Document []*Document ``
+}
+
+type RProjectDocumentDelete struct {
+	Id []int64
+}
+
+type RProjectDocumentList struct {
+	Skip  int     `json:"skip" form:"skip"`
+	Limit int     `json:"limit" form:"limit;max=50"`
+	Ids   []int64 ``
 }
