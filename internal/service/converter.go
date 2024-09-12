@@ -112,6 +112,7 @@ func convertDocument(in *domain.ProjectDocument) *pb.Document {
 	var rs = &pb.Document{
 		Id:           in.Id,
 		ProjectId:    in.ProjectId,
+		DocumentName: in.Name,
 		Url:          in.Url,
 		DocumentType: in.DocumentType,
 		UpdatedAt:    in.CreatedAt.Unix(),

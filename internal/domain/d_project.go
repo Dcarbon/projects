@@ -160,6 +160,7 @@ func (p RProjectGetList) GetUnit() string {
 
 type Document struct {
 	Url          string
+	DocumentName string
 	DocumentType string
 	ProjectId    int64
 	Id           int64

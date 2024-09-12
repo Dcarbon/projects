@@ -9,6 +9,7 @@ import (
 type ProjectDocument struct {
 	Id           int64          `gorm:"primaryKey,autoIncrement"`
 	ProjectId    int64          `gorm:"index"` //
+	Name         string         ``
 	Url          string         ``
 	DocumentType string         ``
 	CreatedAt    time.Time      `gorm:"autoCreateTime:true"`

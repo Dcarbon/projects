@@ -200,6 +200,7 @@ func (sv *Service) UpsertDocument(ctx context.Context, req *pb.RUpsertDocument) 
 			ProjectId:    val.ProjectId,
 			DocumentType: val.DocumentType,
 			Id:           val.Id,
+			DocumentName: val.DocumentName,
 		})
 	}
 	data, err := sv.iProject.UpsertDocument(&domain.RProjectDocumentUpsert{Document: documents})

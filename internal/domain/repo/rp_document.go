@@ -13,6 +13,7 @@ func (pImpl *ProjectImpl) UpsertDocument(req *domain.RProjectDocumentUpsert) ([]
 	for _, val := range req.Document {
 		documents = append(documents,
 			&domain.ProjectDocument{
+				Name:         val.DocumentName,
 				Url:          val.Url,
 				DocumentType: val.DocumentType,
 				ProjectId:    val.ProjectId,
@@ -23,7 +24,7 @@ func (pImpl *ProjectImpl) UpsertDocument(req *domain.RProjectDocumentUpsert) ([]
 
 	if err := pImpl.tblDocument().Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}}, // key column
-		DoUpdates: clause.AssignmentColumns([]string{"url", "document_type", "updated_at"}),
+		DoUpdates: clause.AssignmentColumns([]string{"url", "document_type", "updated_at", "name"}),
 	}).Create(&documents).Error; err != nil {
 		return nil, err
 	}
